@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <bitmap android:src="@drawable/burger"
+                android:gravity="center" />
+        <gradient
+            android:type="radial"
+            android:gradientRadius="10%p"
+            android:startColor="#f6ee19"
+            android:endColor="#115ede" />
+    </item>
+
+</layer-list>

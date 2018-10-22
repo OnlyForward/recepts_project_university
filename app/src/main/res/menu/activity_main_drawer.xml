@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:title="@string/recipes"
+            android:id="@+id/nav_recipes"
+            android:icon="@drawable/ic_favorite_recipes"/>
+        <item
+            android:id="@+id/nav_saved_recipes"
+            android:icon="@drawable/ic_saved_recipes"
+            android:title="@string/savedRecipes"/>
+        <item
+            android:id="@+id/nav_create"
+            android:icon="@drawable/ic_add_recipes"
+            android:title="@string/createRecipes"/>
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/wrench"
+            android:title="@string/settings"/>
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/icon"
+            android:title="@string/aboutApp"/>
+    </group>
+
+    <item tools:ignore="MenuTitle">
+        <menu>
+            <item
+                android:id="@+id/nav_quit"
+                android:icon="@drawable/exit"
+                android:title="@string/exit"/>
+        </menu>
+    </item>
+
+</menu>

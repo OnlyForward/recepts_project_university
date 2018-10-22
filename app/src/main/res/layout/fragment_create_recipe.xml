@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:layout_margin="16dp">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+
+    <android.support.design.widget.TextInputEditText
+        android:id="@+id/create_name_recipe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/nameOfRecipe"
+        android:layout_marginBottom="16dp"/>
+
+    <android.support.design.widget.TextInputEditText
+        android:id="@+id/create_recipes_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:lines="5"
+        android:paddingLeft="8dp"
+        android:layout_marginBottom="16dp"
+        android:maxLength="120"
+        android:hint="@string/descriptionOfREcipes"
+        android:background="@drawable/description_edit"/>
+
+    <RelativeLayout
+        android:layout_marginBottom="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_alignParentStart="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ingredients"
+            android:textSize="20sp"
+            android:layout_alignParentLeft="true"/>
+
+        <Button
+            android:id="@+id/add_ingredient"
+            android:layout_width="48dp"
+            android:layout_height="24dp"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_vertical"
+            android:layout_toStartOf="@+id/reduce_ingredient"
+            android:background="@drawable/right_engles"
+            android:text="+"
+            android:layout_toLeftOf="@+id/reduce_ingredient"/>
+
+        <Button
+            android:id="@+id/reduce_ingredient"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center_vertical"
+            android:layout_width="48dp"
+            android:layout_height="24dp"
+            android:background="@drawable/left_engles"
+            android:text="-"
+            android:layout_alignParentEnd="true"/>
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/ingredients_recipes_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <RelativeLayout
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_alignParentStart="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/descriptionSteps"
+            android:textSize="20sp"
+            android:layout_alignParentLeft="true"/>
+
+        <Button
+            android:id="@+id/add_step"
+            android:layout_width="48dp"
+            android:layout_height="24dp"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_vertical"
+            android:layout_toStartOf="@+id/reduce_step"
+            android:background="@drawable/right_engles"
+            android:text="+"
+            android:layout_toLeftOf="@+id/reduce_step"/>
+
+        <Button
+            android:id="@+id/reduce_step"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center_vertical"
+            android:layout_width="48dp"
+            android:layout_height="24dp"
+            android:background="@drawable/left_engles"
+            android:text="-"
+            android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+    android:id="@+id/steps_recipes_recycler"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
+
+    <Button
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_without_engles"
+        android:id="@+id/btn_send_recipe"
+        android:text="@string/createRecipes"/>
+</LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

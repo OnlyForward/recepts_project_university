@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="190dp"
+              android:layout_height="wrap_content"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:background="@drawable/lay_without_engles"
+              android:gravity="center_horizontal"
+              android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/dialog_report"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="8dp"
+            android:text="@string/reportReceipts"/>
+
+        <TextView
+            android:id="@+id/textview_save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="8dp"
+            android:text="@string/savedRecipes"/>
+
+        <TextView
+            android:id="@+id/textview_like"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="8dp"
+            android:text="@string/like"/>
+
+        <TextView
+            android:id="@+id/dialog_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="8dp"
+            android:text="@string/Cancel"/>
+</LinearLayout>

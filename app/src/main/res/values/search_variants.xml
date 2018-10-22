@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sort">
+        <item>Релеватности</item>
+        <item>По избранным пользователям</item>
+        <item>По одобрениям</item>
+        <item>По дате</item>
+        <item>По сложности</item>
+        <item>По времени приготовления</item>
+    </string-array>
+</resources>

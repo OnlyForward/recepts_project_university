@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">Would you like a snack?</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_bottom_navigation">BottomNavigation</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="editName">Введите имя</string>
+    <string name="nameOfRecipe">Введите название блюда</string>
+    <string name="exit">Выход</string>
+    <string name="aboutApp">О приложении</string>
+    <string name="Registration">Зарегестрироваться</string>
+    <string name="WithoutRegistration">Продолжить без регистрации</string>
+    <string name="recipes">рецепты</string>
+    <string name="savedRecipes">Сохраненные рецепты</string>
+    <string name="createRecipes">Создать рецепт</string>
+    <string name="settings">Настройки</string>
+    <string name="descriptionOfApp">"Would you like a snack? - приложение, созданное для поиска различных рецептов еды. С возможностью для пользователей создаввать свои рецепты, оценивать чужие и сохранять понравившиеся рецепты. Проект выполнен как курсовая работа 3 курса ИГЭУ.\n\nСоздатель ШИбанов.Д.Ю"</string>
+    <string name="notifications">Оповещения</string>
+    <string name="changePhoto">сменить фото</string>
+    <string name="relevSort">Релевантности</string>
+    <string name="sortBy">Сортировка по:</string>
+    <string name="descriptionOfREcipes">Описание рецепта</string>
+    <string name="ingredients">Ингредиенты</string>
+    <string name="descriptionSteps">Описание шагов</string>
+    <string name="makeLogin">Введите логин</string>
+    <string name="writeMail">Введите ваш mail</string>
+    <string name="writePhone">Введите телефон</string>
+    <string name="finishRegistration">Закончить регистрацию</string>
+    <string name="editCount">Введите колличество</string>
+    <string name="reportReceipts">Пожаловаться</string>
+    <string name="like">Лайкнуть</string>
+    <string name="Cancel">Отмена</string>
+    <string name="DoYouReport">Вы хотите пожаловаться?</string>
+
+</resources>

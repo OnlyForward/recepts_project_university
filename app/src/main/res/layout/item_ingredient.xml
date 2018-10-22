@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+    android:weightSum="5">
+
+    <android.support.design.widget.TextInputEditText
+        android:id="@+id/edit_count_ing"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:hint="@string/editCount"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:layout_height="wrap_content"/>
+
+    <Spinner
+        android:id="@+id/spinner_of_ing"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_weight="3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"/>
+
+    <Spinner
+        android:id="@+id/spinner_of_ensure"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
