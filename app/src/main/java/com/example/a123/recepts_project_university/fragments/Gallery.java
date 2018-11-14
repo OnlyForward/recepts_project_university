@@ -1,25 +1,25 @@
-package com.example.a123.recepts_project_university.activity;
+package com.example.a123.recepts_project_university.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.example.a123.recepts_project_university.R;
+import com.example.a123.recepts_project_university.adapter.GridImageAdapter;
 import com.example.a123.recepts_project_university.model.FilePaths;
 import com.example.a123.recepts_project_university.model.FileSearch;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -30,17 +30,11 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import java.util.ArrayList;
 
 
-public class Gallery extends AppCompatActivity {
+public class Gallery extends Fragment {
 
     private GridView mGridView;
     private ImageView mGalleryImage;
     private ProgressBar mProgressBar;
-    private TextView title;
-    private ImageView mClose;
-    private TextView next;
-    private ImageView imagePreview;
-    private ImageButton mBack;
-    private Toolbar mToolbar;
 
     private ArrayList<String> directories;
     private int aboutAdress = 0;
@@ -51,74 +45,27 @@ public class Gallery extends AppCompatActivity {
      ArrayList<String> imageURL;
 
 
+     public String getSelectedImage(){
+         return  imageURL.get(aboutAdress);
+     }
+
+
+    @Nullable
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_gallery,menu);
-        return true;
-    }
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.activity_gallery,container,false);
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()){
-            case R.id.menu_ok:
-                if(!changed) {
-                    changed = true;
-                    finish();
-                }
-        }
-
-        return true;
-    }
-
-    @Override
-    public void finish() {
-        Intent _intent = new Intent();
-//        Bitmap _bitmap = ((BitmapDrawable)mGalleryImage.getDrawable()).getBitmap() ; // your bitmap
-//        ByteArrayOutputStream _bs = new ByteArrayOutputStream();
-//        _bitmap.compress(Bitmap.CompressFormat.PNG, 50, _bs);
-//        _intent.putExtra("byteArray", _bs.toByteArray());
-        if(changed) {
-            _intent.putExtra("Image", imageURL.get(aboutAdress));
-        }else{
-            _intent.putExtra("Image","");
-        }
-        setResult(RESULT_OK, _intent);
-        super.finish();
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gallery);
-
-        mToolbar = findViewById(R.id.gallery_toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
-        mGalleryImage = (ImageView)findViewById(R.id.galleryImageView);
-        mGridView = (GridView)findViewById(R.id.gridView);
-        mProgressBar = (ProgressBar)findViewById(R.id.progressBar);
+        mGalleryImage = (ImageView)v.findViewById(R.id.galleryImageView);
+        mGridView = (GridView)v.findViewById(R.id.gridView);
+        mProgressBar = (ProgressBar)v.findViewById(R.id.progressBar);
         mProgressBar.setVisibility(View.GONE);
         directories = new ArrayList<>();
-//        mBack = (ImageButton) findViewById(R.id.btn_back);
-//        mBack.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                finish();
-//            }
-//        });
 
         init();
+
+        return v;
     }
+
     private void init(){
         FilePaths filePaths = new FilePaths();
 
@@ -136,18 +83,19 @@ public class Gallery extends AppCompatActivity {
         int gridWidth = getResources().getDisplayMetrics().widthPixels;
         int imageWidth = gridWidth/GRID_COLUMS;
         mGridView.setColumnWidth(imageWidth);
-        GridImageAdapter adapter = new GridImageAdapter(this,R.layout.layout_grid_image_view,mAppend,imageURL);
+        GridImageAdapter adapter = new GridImageAdapter(getContext(),R.layout.layout_grid_image_view,mAppend,imageURL);
         mGridView.setAdapter(adapter);
 
         if(imageURL.size()>0) {
-            setImage(imageURL.get(0), mGalleryImage, mAppend, getApplicationContext());
+            setImage(imageURL.get(0), mGalleryImage, mAppend, getContext());
         }
 
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                setImage(imageURL.get(i), mGalleryImage, mAppend, getApplicationContext());
+                setImage(imageURL.get(i), mGalleryImage, mAppend, getContext());
                 aboutAdress = i;
+                Log.v("AddressImage",imageURL.get(aboutAdress));
             }
         });
     }
@@ -193,7 +141,7 @@ public class Gallery extends AppCompatActivity {
         String[] projection = { MediaStore.MediaColumns.DATA,
                 MediaStore.Images.Media.BUCKET_DISPLAY_NAME };
 
-        cursor = getContentResolver().query(uri, projection, null,
+        cursor = getActivity().getContentResolver().query(uri, projection, null,
                 null, null);
 
         column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);

@@ -5,7 +5,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.a123.recepts_project_university"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -18,11 +18,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java', 'build/generated/source/greendao']
+        }
+    }
+
+
 }
 
-greendao{
-    schemaVersion 1
-    targetGenDir 'src/main/java'
+
+greendao {
+    schemaVersion 14
+//    targetGenDir 'src/main/java'
 }
 
 dependencies {
@@ -38,4 +47,8 @@ dependencies {
     implementation 'com.karumi:dexter:4.1.0'
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    implementation 'javax.inject:javax.inject:1'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.3'
+    compileOnly 'javax.annotation:jsr250-api:1.0'
 }

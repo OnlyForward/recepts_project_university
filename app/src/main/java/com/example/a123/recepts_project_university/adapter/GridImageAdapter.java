@@ -1,4 +1,4 @@
-package com.example.a123.recepts_project_university.activity;
+package com.example.a123.recepts_project_university.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.a123.recepts_project_university.R;
+import com.example.a123.recepts_project_university.activity.SqaureImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;

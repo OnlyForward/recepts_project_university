@@ -38,7 +38,7 @@ public class RegestrationOrNot extends AppCompatActivity {
         });
 
         mWhithoutRegistration = (Button)findViewById(R.id.btn_without_registration);
-        mWhithoutRegistration.setTranslationZ(37.5f);
+        //mWhithoutRegistration.setTranslationZ(37.5f);
         mWhithoutRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

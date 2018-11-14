@@ -21,6 +21,7 @@
             app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
             android:fitsSystemWindows="true"
             app:titleEnabled="true"
+            android:labelFor="@id/toolbar"
             app:contentScrim="@android:color/white"
             app:expandedTitleMarginStart="64dp"
             app:expandedTitleMarginEnd="56dp"

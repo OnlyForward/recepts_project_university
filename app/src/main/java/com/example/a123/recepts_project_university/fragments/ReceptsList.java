@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,8 @@ import android.widget.TextView;
 
 import com.example.a123.recepts_project_university.R;
 import com.example.a123.recepts_project_university.activity.DescriptionRecipe;
+import com.example.a123.recepts_project_university.db.model.Receipt;
+import com.example.a123.recepts_project_university.model.ReceiptsLab;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,13 +30,11 @@ import java.util.List;
 public class ReceptsList extends Fragment {
 
     private RecyclerView mList;
-    private SearchView mSearchView;
     static int a = 10;
 
-    List<Menu> menus;
+    private List<Receipt> mReceipts;
     private AssetManager mAssetManager;
     private String[] mImages;
-    private String[] mOpisanie;
     private static List<String> mELements;
     private boolean isLoading;
 
@@ -52,8 +51,8 @@ public class ReceptsList extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recepts_list,container,false);
-        MenuLab menuLab = MenuLab.get(getActivity());
-        menus = menuLab.getMenus();
+        ReceiptsLab receiptsLab = ReceiptsLab.get(getActivity());
+        mReceipts = receiptsLab.getReceipts();
         mELements = new ArrayList<>();
         mListAdapter = new ListAdapter();
         mLayoutManager = new GridLayoutManager(getContext(),3);
@@ -61,7 +60,6 @@ public class ReceptsList extends Fragment {
         mAssetManager = getActivity().getAssets();
         try {
             mImages = mAssetManager.list("icon");
-            mOpisanie = mAssetManager.list("opisanie");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -74,14 +72,6 @@ public class ReceptsList extends Fragment {
         mList.setLayoutManager(mLayoutManager);
         mList.setAdapter(mListAdapter);
         mList.addOnScrollListener(scrollListener);
-
-//        mSearchView = (SearchView)view.findViewById(R.id.search_recepts);
-//        mSearchView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
 
         return view;
     }
@@ -156,12 +146,14 @@ public class ReceptsList extends Fragment {
         private ImageView mPicture;
         private TextView mTitle;
         private int delay = 0;
+
+
         Handler handler = new Handler();
         Runnable MyThead = new Runnable() {
             @Override
             public void run() {
                 if(delay==1) {
-                    Intent intent = DescriptionRecipe.newInstance(menus.get(getAdapterPosition()).getUUID(),getContext());
+                    Intent intent = DescriptionRecipe.newInstance(getAdapterPosition(),getContext());
                     delay = 0;
                     startActivity(intent);
                 }
@@ -175,7 +167,7 @@ public class ReceptsList extends Fragment {
             mLiked.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    mLiked.setImageDrawable(getResources().getDrawable(R.drawable.saved_image));
                 }
             });
 
@@ -192,7 +184,6 @@ public class ReceptsList extends Fragment {
                         mLiked.setImageDrawable(getResources().getDrawable(R.drawable.saved_image));
                         delay = 0;
                     }
-                    //delay = 0;
                 }
             });
             mTitle = itemView.findViewById(R.id.title);
@@ -207,7 +198,7 @@ public class ReceptsList extends Fragment {
             catch (IOException e){
                 e.printStackTrace();
             }
-            mTitle.setText("hdkahsdkjhaskhdkashdkasjadslk");
+            mTitle.setText(mReceipts.get(position).getTitle());
         }
     }
 

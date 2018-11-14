@@ -9,13 +9,13 @@
         android:layout_height="wrap_content"
         android:id="@+id/relLayout1">
 
-        <android.support.v7.widget.Toolbar
-            android:theme="@style/MyToolBar"
-            app:titleTextColor="@android:color/white"
-            android:background="@color/colorPrimary"
-            android:id="@+id/gallery_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"/>
+        <!--<android.support.v7.widget.Toolbar-->
+            <!--android:theme="@style/MyToolBar"-->
+            <!--app:titleTextColor="@android:color/white"-->
+            <!--android:background="@color/colorPrimary"-->
+            <!--android:id="@+id/gallery_toolbar"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="?attr/actionBarSize"/>-->
 
     </RelativeLayout>
     <LinearLayout

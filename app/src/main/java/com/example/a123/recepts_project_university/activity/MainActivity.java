@@ -1,20 +1,16 @@
 package com.example.a123.recepts_project_university.activity;
 
-import android.os.Bundle;
-import android.support.design.widget.NavigationView;
+import android.app.SearchManager;
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.a123.recepts_project_university.R;
-import com.example.a123.recepts_project_university.database.ReceptsBaseHelper;
 import com.example.a123.recepts_project_university.fragments.AboutApp;
 import com.example.a123.recepts_project_university.fragments.CreateRecipes;
 import com.example.a123.recepts_project_university.fragments.ReceptsList;
@@ -22,43 +18,14 @@ import com.example.a123.recepts_project_university.fragments.SavedRecipes;
 import com.example.a123.recepts_project_university.fragments.Settings;
 import com.example.a123.recepts_project_university.model.StackFragments;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
-    private ReceptsBaseHelper mReceptsBaseHelper;
+public class MainActivity extends BasicActivity {
     private StackFragments mStackFragments;
 
+    private boolean hide = true;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        mStackFragments = StackFragments.getInstance();
-        //mReceptsBaseHelper = new ReceptsBaseHelper(getApplicationContext());
-        //mReceptsBaseHelper.getWritableDatabase();
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.nav_recipes);
-        Fragment fragment = new ReceptsList();
-        String name = fragment.getClass().getName();
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment, name).commit();
+    public Fragment createFragment() {
+        return new ReceptsList();
     }
 
     @Override
@@ -73,10 +40,18 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+
         getMenuInflater().inflate(R.menu.main, menu);
-//        MenuItem menuItem = menu.getItem(0);
-//        menuItem.setChecked(true);
+        if (hide) {
+            menu.setGroupVisible(R.id.group_search, hide);
+            SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        } else {
+            menu.setGroupVisible(R.id.group_search, hide);
+            this.invalidateOptionsMenu();
+        }
+
         return true;
     }
 
@@ -86,13 +61,6 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
 
         return super.onOptionsItemSelected(item);
     }
@@ -105,21 +73,31 @@ public class MainActivity extends AppCompatActivity
         item.setChecked(true);
         Fragment fragment = null;
 
-        switch(id){
+        switch (id) {
             case R.id.nav_recipes:
-                fragment = new ReceptsList();
+                fragment = createFragment();
+                hide = true;
+                this.invalidateOptionsMenu();
                 break;
             case R.id.nav_settings:
                 fragment = new Settings();
+                this.invalidateOptionsMenu();
+                hide = false;
                 break;
             case R.id.nav_saved_recipes:
                 fragment = new SavedRecipes();
+                this.invalidateOptionsMenu();
+                hide = true;
                 break;
             case R.id.nav_about:
+                hide = false;
                 fragment = new AboutApp();
+                this.invalidateOptionsMenu();
                 break;
             case R.id.nav_create:
+                hide = false;
                 fragment = new CreateRecipes();
+                this.invalidateOptionsMenu();
                 break;
         }
 
@@ -129,15 +107,9 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void startFragment(Fragment fragment){
+    private void startFragment(Fragment fragment) {
         String name = fragment.getClass().getName();
         FragmentManager fragmentManager = getSupportFragmentManager();
-        if(mStackFragments.popBackStack(name)==null) {
-            mStackFragments.addFragment(name);
-            Log.v("ClassName", name);
-            fragmentManager.beginTransaction().replace(R.id.container, fragment, name).addToBackStack(null).commit();
-        }else {
-            fragmentManager.popBackStack(name,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        }
+        fragmentManager.beginTransaction().replace(R.id.container, fragment, name).commit();
     }
 }

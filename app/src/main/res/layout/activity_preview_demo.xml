@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/FrameLayout01"
+              android:orientation="vertical"
+              android:weightSum="4"
+             android:layout_width="match_parent"
+              android:layout_height="match_parent"
+             xmlns:android="http://schemas.android.com/apk/res/android">
+    <SurfaceView android:id="@+id/SurfaceView01"
+                 android:layout_weight="3"
+                 android:layout_width="match_parent"
+                 android:layout_height="0dp"/>
+
+    <Button
+        android:id="@+id/Button01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/circle_button">
+    </Button>
+</LinearLayout>

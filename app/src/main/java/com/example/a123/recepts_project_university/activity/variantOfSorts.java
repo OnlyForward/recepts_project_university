@@ -1,6 +1,5 @@
 package com.example.a123.recepts_project_university.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -12,27 +11,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.a123.recepts_project_university.R;
+import com.example.a123.recepts_project_university.model.AppSettings;
 
 public class variantOfSorts extends AppCompatActivity {
-
     private Toolbar mToolbar;
     private RecyclerView mRecyclerView;
 
-
-    private boolean choice;
     private int varSearch;
-    private int sortDefault;
     private String[] sortVar;
     private SortVarAdapter mAdapter;
+    private AppSettings mySettings;
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_gallery,menu);
-
         return true;
     }
 
@@ -40,23 +37,18 @@ public class variantOfSorts extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_ok:
-                choice = true;
+                finish();
                 break;
         }
 
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void finish() {
+        mySettings.setVarSort(varSearch);
         super.finish();
-        Intent intent = new Intent();
-        if(choice) {
-            intent.putExtra("Sort", varSearch);
-        }else {
-            intent.putExtra("Sort",sortDefault);
-        }
-        setResult(RESULT_OK,intent);
+
     }
 
     @Override
@@ -64,7 +56,8 @@ public class variantOfSorts extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_variant_of_sorts);
 
-        mToolbar = (Toolbar)findViewById(R.id.toolbar_choice);
+        mySettings = new AppSettings(getBaseContext());
+        mToolbar = (Toolbar)findViewById(R.id.toolbar_choice_var);
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -79,17 +72,16 @@ public class variantOfSorts extends AppCompatActivity {
 
 
         sortVar = getResources().getStringArray(R.array.sort);
-
-        varSearch = getIntent().getIntExtra("Variant_Of_search",-1);
-        sortDefault = varSearch;
-
-
+        varSearch = mySettings.getVarSort();
         mAdapter = new SortVarAdapter();
 
         mRecyclerView = (RecyclerView)findViewById(R.id.sort_variants);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
     }
+
+
+
 
     private class SortVarAdapter extends RecyclerView.Adapter<SortVarHolder>{
         private SortVarHolder mHolder;
@@ -112,24 +104,33 @@ public class variantOfSorts extends AppCompatActivity {
         }
     }
 
-    private class SortVarHolder extends RecyclerView.ViewHolder{
-
+    private class SortVarHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private TextView mVariant;
+        private ImageView mOk;
 
         public SortVarHolder(@NonNull View itemView) {
             super(itemView);
+
+            mOk = (ImageView)itemView.findViewById(R.id.for_image_ok);
             mVariant = (TextView)itemView.findViewById(R.id.text_var_of_sort);
-            mVariant.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mVariant.setCompoundDrawables(null,null,getResources().getDrawable(R.drawable.ic_okey),null);
-                    varSearch = getAdapterPosition();
-                }
-            });
+            itemView.setOnClickListener(this);
         }
 
         public void onBind(int position){
             mVariant.setText(sortVar[position]);
+            if(position==varSearch) {
+                mOk.setImageDrawable(getResources().getDrawable(R.drawable.ic_okey_black));
+            }else {
+                mOk.setImageDrawable(null);
+            }
+        }
+
+        @Override
+        public void onClick(View view) {
+            ImageView image = mRecyclerView.getChildAt(varSearch).findViewById(R.id.for_image_ok);
+            image.setImageDrawable(null);
+            mOk.setImageDrawable(getResources().getDrawable(R.drawable.ic_okey_black));
+            varSearch = getAdapterPosition();
         }
     }
 }

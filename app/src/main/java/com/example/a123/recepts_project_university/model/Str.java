@@ -1,4 +1,4 @@
-package com.example.a123.recepts_project_university.fragments;
+package com.example.a123.recepts_project_university.model;
 
 import java.util.Vector;
 

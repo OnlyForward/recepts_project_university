@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.a123.recepts_project_university.R;
-import com.example.a123.recepts_project_university.activity.Gallery;
+import com.example.a123.recepts_project_university.activity.GalleryActivity;
 import com.example.a123.recepts_project_university.activity.variantOfSorts;
+import com.example.a123.recepts_project_university.model.AppSettings;
+
+import static android.app.Activity.RESULT_OK;
 
 public class Settings extends Fragment {
 
@@ -30,7 +34,7 @@ public class Settings extends Fragment {
     private TextView mSort;
     private Spinner mTheme;
     private Switch mNotifivations;
-    private int sortDefalut = 0;
+    private String[] sorts;
 
     private static final int TAKE_IMAGE = 3;
     private static final int SORT_VAR = 5;
@@ -38,36 +42,40 @@ public class Settings extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==TAKE_IMAGE){
+        if(resultCode!=RESULT_OK){
+            Log.v("OnActivityResultSetting","mistake");
+            return;
+        }
+        if (requestCode == TAKE_IMAGE) {
 //            Bitmap _bitmap = BitmapFactory.decodeByteArray(
 //                    data.getByteArrayExtra("byteArray"),0,data.getByteArrayExtra("byteArray").length);
 //            RoundedImageDrawable drawable = new RoundedImageDrawable(BitmapFactory.decodeResource(getActivity().getResources(),R.drawable.hamburger),90);
 //            mPhoto.setImageDrawable(Drawable.createFromPath(data.getStringExtra("Image")));
 //            mPhoto.setImageURI(Uri.parse(data.getStringExtra("Image")));
 //            mPhoto.setImageBitmap(_bitmap);
-            Bitmap bitmap = ((BitmapDrawable)Drawable.createFromPath(data.getStringExtra("Image"))).getBitmap();
+            Bitmap bitmap = ((BitmapDrawable) Drawable.createFromPath(data.getStringExtra("Image"))).getBitmap();
             Glide.with(getContext()).load(data.getStringExtra("Image")).apply(RequestOptions.circleCropTransform()).into(mPhoto);
 //            mPhoto.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bitmap,6000));
-        }else if(requestCode==SORT_VAR){
-            sortDefalut = data.getIntExtra("Sort",0);
         }
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_settings,container,false);
+        View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        mChangePhoto = (TextView)view.findViewById(R.id.change_photo);
+        final AppSettings settings = new AppSettings(getActivity());
+
+        mChangePhoto = (TextView) view.findViewById(R.id.change_photo);
         mChangePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(),Gallery.class);
-                startActivityForResult(intent,TAKE_IMAGE);
+                Intent intent = new Intent(getActivity(), GalleryActivity.class);
+                startActivityForResult(intent, TAKE_IMAGE);
             }
         });
 
-        mPhoto = (ImageView)view.findViewById(R.id.open_photo);
+        mPhoto = (ImageView) view.findViewById(R.id.open_photo);
         mPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,24 +83,25 @@ public class Settings extends Fragment {
             }
         });
 
-        mSort = (TextView)view.findViewById(R.id.type_of_sort);
-        mSort.setText(getActivity().getResources().getStringArray(R.array.sort)[sortDefalut]);
+        mSort = (TextView) view.findViewById(R.id.type_of_sort);
+        sorts = getActivity().getResources().getStringArray(R.array.sort);
+        mSort.setText(sorts[settings.getVarSort()]);
         mSort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(),variantOfSorts.class);
-                intent.putExtra("Variant_Of_search",sortDefalut);
-                startActivityForResult(intent, SORT_VAR);
+                Intent intent = new Intent(getActivity(), variantOfSorts.class);
+                startActivity(intent);
             }
         });
 
-        mTheme = (Spinner)view.findViewById(R.id.spinner_theme);
+        mTheme = (Spinner) view.findViewById(R.id.spinner_theme);
 
-        mNotifivations = (Switch)view.findViewById(R.id.switch_notifications);
+        mNotifivations = (Switch) view.findViewById(R.id.switch_notifications);
+        mNotifivations.setChecked(settings.isNotifications());
         mNotifivations.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-
+                settings.setNotifications(!settings.isNotifications());
             }
         });
 

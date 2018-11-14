@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CoordinatorLayout
+
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:layout_behavior="@string/bottom_sheet_behavior"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/bottom_dialog"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:padding="16dp"
+              android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/description_var_of_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
+</CoordinatorLayout>

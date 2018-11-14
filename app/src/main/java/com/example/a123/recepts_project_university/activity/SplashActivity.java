@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.example.a123.recepts_project_university.R;
+import com.example.a123.recepts_project_university.model.ReceiptsLab;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -25,16 +26,15 @@ import java.util.TimerTask;
 
 public class SplashActivity extends AppCompatActivity {
     private ImageView mImageView;
-//    public static DatabaseHelper mDBHelper;
-//    public static SQLiteDatabase mDb;
 
     Timer t = new Timer();
     TimerTask timerTask = new TimerTask() {
         @Override
         public void run() {
-            if(isConnectedToNetWork(getApplicationContext())) {
+            if (isConnectedToNetWork(getApplicationContext())) {
                 askPermission();
-            }else {
+                ReceiptsLab.get(getApplicationContext());
+            } else {
                 finish();
             }
         }
@@ -45,39 +45,36 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
-        Bitmap bitmap = ((BitmapDrawable)getResources().getDrawable(R.drawable.desert)).getBitmap();
+        Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.desert)).getBitmap();
         FadedImage image = new FadedImage(bitmap);
-        mImageView = (ImageView)findViewById(R.id.splash_image);
+        mImageView = (ImageView) findViewById(R.id.splash_image);
         mImageView.setImageDrawable(image);
         t.schedule(timerTask, 4000);
     }
 
     public static boolean hasConnection(Context context) {
-        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        if (wifiInfo != null && wifiInfo.isConnected())
-        {
+        if (wifiInfo != null && wifiInfo.isConnected()) {
             return true;
         }
         wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-        if (wifiInfo != null && wifiInfo.isConnected())
-        {
+        if (wifiInfo != null && wifiInfo.isConnected()) {
             return true;
         }
         wifiInfo = cm.getActiveNetworkInfo();
-        if (wifiInfo != null && wifiInfo.isConnected())
-        {
+        if (wifiInfo != null && wifiInfo.isConnected()) {
             return true;
         }
         return false;
     }
 
-    public static boolean isConnectedToNetWork(Context context){
+    public static boolean isConnectedToNetWork(Context context) {
         boolean connected = false;
-        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm != null) {
             NetworkInfo ni = cm.getActiveNetworkInfo();
-            if(ni!=null){
+            if (ni != null) {
                 connected = ni.isConnected();
             }
         }
@@ -86,13 +83,13 @@ public class SplashActivity extends AppCompatActivity {
 
 
     private void askPermission() {
-        Dexter.withActivity(this).withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA)
+        Dexter.withActivity(this).withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
                 .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         if (report.areAllPermissionsGranted()) {
-                                Intent intent = new Intent(SplashActivity.this, RegestrationOrNot.class);
-                                startActivity(intent);
+                            Intent intent = new Intent(SplashActivity.this, RegestrationOrNot.class);
+                            startActivity(intent);
                         } else {
                             finish();
                         }
@@ -106,7 +103,6 @@ public class SplashActivity extends AppCompatActivity {
 
                 }).check();
     }
-
 
 
 //    public static String[] PostDataBase(String id, String[] colums, String table, String key){

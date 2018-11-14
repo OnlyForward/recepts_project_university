@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/save_receipt_toolbar"
+        android:icon="@drawable/ic_save_receipt_var"
+        android:title="save_image"
+        app:showAsAction="always"/>
 <item
     android:id="@+id/dialog_settings"
     android:icon="@drawable/ic_open_dialogs"
