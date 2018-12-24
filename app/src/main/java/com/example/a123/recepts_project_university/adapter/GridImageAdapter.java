@@ -78,8 +78,6 @@ public class GridImageAdapter extends ArrayAdapter<String>{
         }
 
         String imgURL = getItem(position);
-//        Glide.with(getContext()).load(mAppend + imgURL).into(holder.image);
-
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.init(ImageLoaderConfiguration.createDefault(getContext()));
         imageLoader.displayImage(mAppend + imgURL, holder.image, new ImageLoadingListener() {

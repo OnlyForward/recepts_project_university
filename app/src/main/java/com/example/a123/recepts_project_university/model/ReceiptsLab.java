@@ -71,6 +71,29 @@ public class ReceiptsLab {
             receipt.setListStep(mStepToReceiptsList);
             mReceipts.add(receipt);
         }
+
+    }
+
+    private void saveToBase(){
+        AppDbHelper appDbHelper = TakeDb.getAppDbHelper();
+        for(int j = 0;j<mReceipts.size();j++) {
+            Long key = appDbHelper.saveReceipts(mReceipts.get(j));
+            for (int i = 0; i < mReceipts.get(j).getListStep().size(); i++) {
+                mReceipts.get(j).getListStep().get(i).setId_receipts(key);
+                appDbHelper.saveSteps(mReceipts.get(j).getListStep().get(i));
+            }
+        }
+    }
+
+    public List<Receipt> getReceipts(String query){
+        List<Receipt> receiptList = new ArrayList<>();
+        for (Receipt receipt:
+                mReceipts) {
+            if(receipt.getTitle().toLowerCase().contains(query.toLowerCase())){
+                receiptList.add(receipt);
+            }
+        }
+        return receiptList;
     }
 
     public void MyReceptsSteps(List<String> Steps, Long id){

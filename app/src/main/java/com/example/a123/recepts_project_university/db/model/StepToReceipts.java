@@ -12,7 +12,7 @@ import org.greenrobot.greendao.annotation.Property;
 public class StepToReceipts {
 
     @Id
-    private Long id_step;
+    private Long step_id;
 
     @Property(nameInDb = "id_receipts_steps")
     @NotNull
@@ -48,15 +48,17 @@ public class StepToReceipts {
     public StepToReceipts() {
     }
 
-    @Generated(hash = 1883482760)
-    public StepToReceipts(Long id_step, @NotNull Long id_receipts_step, int step,
+    @Generated(hash = 1506233309)
+    public StepToReceipts(Long step_id, @NotNull Long id_receipts_step, int step,
             String imageToStep, String ImageDesciption) {
-        this.id_step = id_step;
+        this.step_id = step_id;
         this.id_receipts_step = id_receipts_step;
         this.step = step;
         this.imageToStep = imageToStep;
         this.ImageDesciption = ImageDesciption;
     }
+
+
 
     public Long getId_receipts() {
         return this.id_receipts_step;
@@ -135,13 +137,12 @@ public class StepToReceipts {
     }
 
 
-
-    public Long getId_step() {
-        return this.id_step;
+    public Long getStep_id() {
+        return this.step_id;
     }
 
-    public void setId_step(Long id_step) {
-        this.id_step = id_step;
+    public void setStep_id(Long step_id) {
+        this.step_id = step_id;
     }
 
     /** called by internal mechanisms, do not call yourself. */

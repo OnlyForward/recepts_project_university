@@ -1,4 +1,4 @@
-package com.example.a123.recepts_project_university;
+package com.example.a123.recepts_project_university.adapter;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;

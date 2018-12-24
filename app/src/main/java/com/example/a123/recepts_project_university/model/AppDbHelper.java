@@ -3,9 +3,10 @@ package com.example.a123.recepts_project_university.model;
 import com.example.a123.recepts_project_university.db.model.DaoMaster;
 import com.example.a123.recepts_project_university.db.model.DaoSession;
 import com.example.a123.recepts_project_university.db.model.Receipt;
+import com.example.a123.recepts_project_university.db.model.StepToReceipts;
 import com.example.a123.recepts_project_university.db.model.User;
-import  com.example.a123.recepts_project_university.db.model.StepToReceipts;
 
+import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -28,7 +29,6 @@ public class AppDbHelper implements DbHelper {
     @Override
     public List<User> getAllUsers() {
         return mDaoSession.getUserDao().loadAll();
-
     }
 
     @Override
@@ -53,22 +53,30 @@ public class AppDbHelper implements DbHelper {
         return true;
     }
 
-    public Receipt getReceipt(Long Key){
+    public Receipt getReceipt(Long Key) {
         return mDaoSession.getReceiptDao().load(Key);
     }
 
-    public Boolean saveSteps(StepToReceipts stepToReceipts){
+    public Boolean saveSteps(StepToReceipts stepToReceipts) {
         mDaoSession.getStepToReceiptsDao().insert(stepToReceipts);
         return true;
     }
 
-    public List<StepToReceipts> getSteps(Long key){
+    public List<StepToReceipts> getSteps(Long key) {
         return mDaoSession.getStepToReceiptsDao()._queryReceipt_MListStep(key);
     }
 
-    public void deleteReceipt(Long key, long key1){
-         mDaoSession.getReceiptDao().deleteByKey(key);
-         mDaoSession.getStepToReceiptsDao().deleteByKey(key1);
+    public void deleteReceipt(Receipt receipt, List<StepToReceipts> list) {
+        Long key = receipt.getId_receipts();
+//        deletePicture(receipt.getIcon());
+//        deletePicture(receipt.getImageMain());
+        mDaoSession.getReceiptDao().deleteByKey(key);
+//        mDaoSession.getStepToReceiptsDao().deleteInTx(list);
+        mDaoSession.getStepToReceiptsDao().deleteInTx(receipt.getListStep());
     }
 
+    private void deletePicture(String s){
+        File file = new File(s);
+        file.delete();
+    }
 }

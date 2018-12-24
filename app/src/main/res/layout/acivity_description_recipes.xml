@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
             android:fitsSystemWindows="true"
-            app:titleEnabled="true"
+            app:titleEnabled="false"
             android:labelFor="@id/toolbar"
             app:contentScrim="@android:color/white"
             app:expandedTitleMarginStart="64dp"
@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="210dp"
         android:id="@+id/image_detaled"
-        android:scaleType="centerCrop"/>
+        android:scaleType="fitXY"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -127,7 +127,7 @@
         </LinearLayout>
 
 
-        <com.example.a123.recepts_project_university.WrapViewPager
+        <com.example.a123.recepts_project_university.adapter.WrapViewPager
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/pager_for_images1"

@@ -106,12 +106,6 @@ public class Preview extends Fragment implements SurfaceHolder.Callback, Camera.
         @Override
         protected String doInBackground(byte[]... arrayOfByte) {
             try {
-//                File saveDir = new File("/sdcard/CameraExample/");
-//
-//                if (!saveDir.exists())
-//                {
-//                    saveDir.mkdirs();
-//                }
                 Bitmap bitmap = BitmapFactory.decodeByteArray(arrayOfByte[0], 0, arrayOfByte[0].length);
                 MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), bitmap, "myImage" , "");
                 String mCurrentPath = String.format("/sdcard/DCIM/Camera/%d.jpg", System.currentTimeMillis());

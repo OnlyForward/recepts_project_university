@@ -19,12 +19,22 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
+import java.io.File;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 
 public class SplashActivity extends AppCompatActivity {
+    private static final String Image_Folder_Icon = "icon/";
+    private static final String Image_Folder_Icon_FULL = "icon_full/";
+    private static final String IMAGE = "image/";
+    private static final String Ingredienti = "ingredienti/";
+    private static final String Opisanie = "opisanie/";
+    private static final String Sam_Recept = "sam_recept/";
+
+    private String mas[] = {Image_Folder_Icon,Image_Folder_Icon_FULL,IMAGE,Ingredienti,Opisanie,Sam_Recept};
+
     private ImageView mImageView;
 
     Timer t = new Timer();
@@ -34,6 +44,12 @@ public class SplashActivity extends AppCompatActivity {
             if (isConnectedToNetWork(getApplicationContext())) {
                 askPermission();
                 ReceiptsLab.get(getApplicationContext());
+                for (String directory:
+                     mas) {
+                    File timed = new File(getExternalFilesDir(null), directory);
+                    timed.mkdirs();
+                }
+
             } else {
                 finish();
             }
@@ -103,40 +119,5 @@ public class SplashActivity extends AppCompatActivity {
 
                 }).check();
     }
-
-
-//    public static String[] PostDataBase(String id, String[] colums, String table, String key){
-//        Cursor cursor = CommonAction.mDb.query(table, colums, key + "=?",
-//                new String[] { String.valueOf(id) }, null, null, null, null);
-//        String[] information = new String[colums.length];
-//        if(cursor.moveToFirst()){
-//            for(int j=0;j<colums.length;j++){
-//                String dd="";
-//                dd=cursor.getString(j);
-//                information[j] = dd;
-//            }
-//        }
-//        cursor.close();
-//        return information;
-//    }
-//
-//    public static List<String[]> PostDataBaseList(String id, String[] colums, String table, String key){
-//        List<String[]> information1 = new ArrayList<>();
-//        Cursor cursor = CommonAction.mDb.query(table, colums, key + "=?",
-//                new String[] { String.valueOf(id) }, null, null, null, null);
-//        boolean c = cursor.moveToFirst();
-//        while(c){
-//            String[] information = new String[colums.length];
-//            for(int j=0;j<colums.length;j++){
-//                String dd="";
-//                dd=cursor.getString(j);
-//                information[j] = dd;
-//            }
-//            information1.add(information);
-//            c = cursor.moveToNext();
-//        }
-//        cursor.close();
-//        return information1;
-//    }
 
 }

@@ -10,23 +10,18 @@ import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 
 import com.example.a123.recepts_project_university.R;
 
 import java.util.regex.Pattern;
 
 
-public class Registration extends AppCompatActivity implements TextWatcher{
+public class Registration extends AppCompatActivity implements TextWatcher {
     private Button mRegistrate;
     private TextInputLayout mName;
     private TextInputLayout mLogin;
     private TextInputLayout mMail;
     private TextInputLayout mTelephone;
-    private EditText mNameEditText;
-    private EditText mLoginEditText;
-    private EditText mMailEditText;
-    private EditText mTelephoneEditText;
 
     private boolean phone;
     private boolean mail;
@@ -38,8 +33,10 @@ public class Registration extends AppCompatActivity implements TextWatcher{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
+
         mName = findViewById(R.id.name);
         mName.getEditText().addTextChangedListener(this);
+
 
         mLogin = findViewById(R.id.login);
         mLogin.getEditText().addTextChangedListener(this);
@@ -54,70 +51,61 @@ public class Registration extends AppCompatActivity implements TextWatcher{
         mRegistrate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isEmailValid(mMail.getEditText().getText())){
+                if (isEmailValid(mMail.getEditText().getText())) {
                     mMail.setErrorEnabled(false);
                     mail = true;
-                }else{
+                } else {
                     mail = false;
                     mMail.setError("email is incorrect");
                 }
-                if(isValidPhone(mTelephone.getEditText().getText().toString()) && mTelephone.getEditText().getText().toString().length()==13){
+                if (isValidPhone(mTelephone.getEditText().getText().toString()) && mTelephone.getEditText().getText().toString().length() == 13) {
                     mTelephone.setErrorEnabled(false);
                     phone = true;
-                }else{
+                } else {
                     phone = false;
                     mTelephone.setError("Неверный формат");
                 }
-                if(mLogin.getEditText().getText().toString().isEmpty()){
+                if (mLogin.getEditText().getText().toString().isEmpty()) {
                     mLogin.setError("Введите логин");
                     login = false;
-                }else{
+                } else {
                     login = true;
                     mLogin.setErrorEnabled(false);
                 }
-                if(mName.getEditText().getText().toString().isEmpty()){
+                if (mName.getEditText().getText().toString().isEmpty()) {
                     mName.setError("Введите имя");
                     name = false;
-                }else{
+                } else {
                     name = true;
                     mName.setErrorEnabled(false);
                 }
-
-                if(phone && login && name && mail){
-                    Intent intent = new Intent(Registration.this,MainActivity.class);
+                if (phone && login && name && mail) {
+                    Intent intent = new Intent(Registration.this, MainActivity.class);
                     startActivity(intent);
                 }
             }
         });
     }
 
-    public boolean isEmailValid(CharSequence email){
+
+    public boolean isEmailValid(CharSequence email) {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    public boolean isPhoneValid(CharSequence phone){
+    public boolean isPhoneValid(CharSequence phone) {
         return Patterns.PHONE.matcher(phone).matches();
     }
 
-    private boolean isValidPhone(String phone)
-    {
-        boolean check=false;
-        if(!Pattern.matches("[a-zA-Z]+", phone))
-        {
-            if(phone.length() < 6 || phone.length() > 13)
-            {
+    private boolean isValidPhone(String phone) {
+        boolean check = false;
+        if (!Pattern.matches("[a-zA-Z]+", phone)) {
+            if (phone.length() < 6 || phone.length() > 13) {
                 check = false;
-
-            }
-            else
-            {
+            } else {
                 check = true;
-
             }
-        }
-        else
-        {
-            check=false;
+        } else {
+            check = false;
         }
         return check;
     }
@@ -136,4 +124,21 @@ public class Registration extends AppCompatActivity implements TextWatcher{
     public void afterTextChanged(Editable editable) {
 
     }
+
+
+//    @Override
+//    public boolean dispatchTouchEvent(@NonNull MotionEvent event) {
+//        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//            View v = getCurrentFocus();
+//            if (v instanceof EditText) {
+//                v.clearFocus();
+//                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+//
+//            }
+//        }
+//
+//        return super.dispatchTouchEvent(event);
+//    }
+
 }

@@ -8,19 +8,25 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
 import com.example.a123.recepts_project_university.R;
+import com.example.a123.recepts_project_university.model.AppDbHelper;
+import com.example.a123.recepts_project_university.model.TakeDb;
 
-public abstract class BasicActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
-
+public abstract class BasicActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     public abstract Fragment createFragment();
+
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        AppDbHelper app =TakeDb.getAppDbHelper();
+        Toast.makeText(getApplicationContext(), String.valueOf(app.getAllUsers().size()), Toast.LENGTH_SHORT).show();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -38,9 +44,9 @@ public abstract class BasicActivity extends AppCompatActivity implements Navigat
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
 
-        if(fragment == null){
+        if (fragment == null) {
             fragment = createFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
         }
     }
 

@@ -21,10 +21,9 @@ public class TakePhoto extends AppCompatActivity {
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private boolean hide = true;
+    private boolean hide;
     private Gallery mGallery;
 
-    private boolean changed;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -36,16 +35,13 @@ public class TakePhoto extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.menu_ok:
                 Intent intent = new Intent();
                 intent.putExtra("Image", mGallery.getSelectedImage());
                 setResult(RESULT_OK, intent);
                 finish();
-
         }
-
         return true;
     }
 
@@ -54,7 +50,7 @@ public class TakePhoto extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choose_photo);
 
-        changed = false;
+        hide = true;
 
         toolbar = (Toolbar) findViewById(R.id.gallery_toolbar);
         setSupportActionBar(toolbar);
@@ -67,7 +63,6 @@ public class TakePhoto extends AppCompatActivity {
                 finish();
             }
         });
-
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
@@ -95,8 +90,6 @@ public class TakePhoto extends AppCompatActivity {
 
         tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
-
-
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -110,5 +103,4 @@ public class TakePhoto extends AppCompatActivity {
 //        }
         viewPager.setAdapter(adapter);
     }
-
 }

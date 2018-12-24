@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
@@ -28,14 +27,20 @@ import com.example.a123.recepts_project_university.R;
 import com.example.a123.recepts_project_university.activity.TakePhoto;
 import com.example.a123.recepts_project_university.db.model.Receipt;
 import com.example.a123.recepts_project_university.db.model.StepToReceipts;
-import com.example.a123.recepts_project_university.model.TakeDb;
 import com.example.a123.recepts_project_university.model.AppDbHelper;
+import com.example.a123.recepts_project_university.model.TakeDb;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class CreateRecipes extends Fragment {
+    private static final int REQUST_IMAGES = 5;
+
     private TextInputEditText mTitle;
     private TextInputEditText mDescription;
     private RecyclerView mSteps;
@@ -47,18 +52,16 @@ public class CreateRecipes extends Fragment {
     private Button mFinish;
 
     private List<String> mImagesList;
-    private List<StepToReceipts> mDescriptionSteps = new ArrayList<>();
-    private List<String> mIngredients = new ArrayList<>();
+    private List<StepToReceipts> mDescriptionSteps;
+    private List<String> mIngredients;
     private StepsAdapter mStepsAdapter;
     private IngredientsAdapter mIngredientsAdapter;
     private LinearLayoutManager mLayoutManager;
     private LinearLayoutManager mLinearLayoutManagerIngredients;
     private File mFile;
-    private List<Drawable> mBitmaps = new ArrayList<>();
+    private List<Drawable> mBitmaps;
 
     private static int picture = -1;
-
-    private static final int REQUST_IMAGES = 5;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -66,11 +69,7 @@ public class CreateRecipes extends Fragment {
             return;
         }
         if (requestCode == REQUST_IMAGES) {
-            Log.v("ImageCreate", data.getStringExtra("Image"));
             Glide.with(getContext()).load(data.getStringExtra("Image")).into((ImageView) mSteps.getChildAt(picture).findViewById(R.id.image_of_step));
-            mDescriptionSteps.get(picture).setImageToStep(data.getStringExtra("Image"));
-            mImagesList.set(picture, data.getStringExtra("Image"));
-            mBitmaps.set(picture, ((ImageView) mSteps.getChildAt(picture).findViewById(R.id.image_of_step)).getDrawable());
         }
     }
 
@@ -78,6 +77,11 @@ public class CreateRecipes extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_recipe, container, false);
+
+        mIngredients = new ArrayList<>();
+        mDescriptionSteps = new ArrayList<>();
+        mBitmaps = new ArrayList<>();
+        mImagesList = new ArrayList<>();
 
         mTitle = (TextInputEditText) view.findViewById(R.id.create_name_recipe);
         mTitle.addTextChangedListener(new TextWatcher() {
@@ -115,8 +119,7 @@ public class CreateRecipes extends Fragment {
             }
         });
 
-        mImagesList = new ArrayList<>();
-        mDescriptionSteps = new ArrayList<>();
+
 
         mLinearLayoutManagerIngredients = new LinearLayoutManager(getContext()) {
             @Override
@@ -193,47 +196,44 @@ public class CreateRecipes extends Fragment {
             @Override
             public void onClick(View view) {
                 Receipt receipt = new Receipt();
+                mImagesList.set(0, getActivity().getExternalFilesDir(null)+"/image_icon/pic1.jpg");
                 receipt.setTitle(mTitle.getEditableText().toString());
                 receipt.setDescription(mDescription.getEditableText().toString());
-                receipt.setIcon(mImagesList.get(0));
                 receipt.setIngredients("djasl");
                 receipt.setImageMain(mImagesList.get(0));
+                receipt.setIcon(getActivity().getExternalFilesDir(null)+"/image_icon/pic1.jpg");
                 AppDbHelper appDbHelper = TakeDb.getAppDbHelper();
                 long key = appDbHelper.saveReceipts(receipt);
                 for (int i = 0;i<mDescriptionSteps.size();i++){
                     mDescriptionSteps.get(i).setId_receipts(key);
                     appDbHelper.saveSteps(mDescriptionSteps.get(i));
                 }
-                saveRecept();
-                //receipt.setListStep(mDescriptionSteps);
+                try {
+                    saveRecept();
+
+                }catch (IOException e){
+                    Log.i("IOexception",e.getMessage());
+                }
             }
 
         });
 
         return view;
     }
-//new File(getActivity().getExternalFilesDir(null), "pic.jpg");
 
-    private void saveRecept() {
-        try {
-//                File saveDir = new File("/sdcard/CameraExample/");
-//
-//                if (!saveDir.exists())
-//                {
-//                    saveDir.mkdirs();
-//                }
-            for (int i = 0;i<mBitmaps.size();i++) {
-                Bitmap bitmap = ((BitmapDrawable) mBitmaps.get(i)).getBitmap();
-                MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), bitmap, "myImage1", "");
-                String mCurrentPath = String.format(getActivity().getExternalFilesDir(null).getAbsolutePath(), System.currentTimeMillis());
-                //FileOutputStream os = new FileOutputStream(mCurrentPath);
-                //os.write(arrayOfByte[0]);
-                //galleryAddPic(mCurrentPath);
-                //os.close();
-            }
-        } catch (Exception e) {
-            //
-        }
+    private void saveRecept() throws IOException {
+        mBitmaps.set(0,((ImageView) mSteps.getChildAt(picture).findViewById(R.id.image_of_step)).getDrawable());
+        String uuid = UUID.randomUUID().toString()+".jpg";
+        mFile = new File(getActivity().getExternalFilesDir(null)+"/image_icon/", uuid);
+
+//      galleryAddPic(mCurrentPath);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        Bitmap bitmap = ((BitmapDrawable) mBitmaps.get(0)).getBitmap();
+        bitmap = Bitmap.createScaledBitmap(bitmap,150,200,true);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        FileOutputStream output = new FileOutputStream(mFile);
+        output.write(byteArray);
     }
 //
 //    private void galleryAddPic(String mCurrentPhotoPath) {

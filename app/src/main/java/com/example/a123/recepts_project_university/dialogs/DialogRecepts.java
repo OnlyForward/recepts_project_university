@@ -29,6 +29,16 @@ public class DialogRecepts extends DialogFragment {
 
     public static final String Code_Return = "Report";
     private int answer = -1;
+    private onItemChosen listener;
+
+
+    public interface onItemChosen{
+        void getResults(int item);
+    }
+
+    public void setItemListener(onItemChosen listener){
+        this.listener = listener;
+    }
 
 
     DialogCallback dialogCallback = new DialogCallback() {
@@ -82,9 +92,10 @@ public class DialogRecepts extends DialogFragment {
             @Override
             public void onClick(View view) {
                 answer = 1;
-                Intent intent = new Intent();
-                intent.putExtra(Code_Return, answer);
-                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
+                listener.getResults(answer);
+//                Intent intent = new Intent();
+//                intent.putExtra(Code_Return, answer);
+//                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
                 dismiss();
             }
         });
@@ -93,10 +104,11 @@ public class DialogRecepts extends DialogFragment {
         mLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                answer = 1;
-                Intent intent = new Intent();
-                intent.putExtra(Code_Return, answer);
-                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
+                answer = 2;
+                listener.getResults(answer);
+//                Intent intent = new Intent();
+//                intent.putExtra(Code_Return, answer);
+//                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
                 dismiss();
             }
         });
@@ -105,10 +117,11 @@ public class DialogRecepts extends DialogFragment {
         mCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                answer = 1;
-                Intent intent = new Intent();
-                intent.putExtra(Code_Return, answer);
-                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
+                answer = 3;
+                listener.getResults(answer);
+//                Intent intent = new Intent();
+//                intent.putExtra(Code_Return, answer);
+//                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
                 dismiss();
             }
         });

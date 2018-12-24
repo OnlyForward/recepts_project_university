@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,19 +42,11 @@ public class Settings extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode!=RESULT_OK){
-            Log.v("OnActivityResultSetting","mistake");
             return;
         }
         if (requestCode == TAKE_IMAGE) {
-//            Bitmap _bitmap = BitmapFactory.decodeByteArray(
-//                    data.getByteArrayExtra("byteArray"),0,data.getByteArrayExtra("byteArray").length);
-//            RoundedImageDrawable drawable = new RoundedImageDrawable(BitmapFactory.decodeResource(getActivity().getResources(),R.drawable.hamburger),90);
-//            mPhoto.setImageDrawable(Drawable.createFromPath(data.getStringExtra("Image")));
-//            mPhoto.setImageURI(Uri.parse(data.getStringExtra("Image")));
-//            mPhoto.setImageBitmap(_bitmap);
             Bitmap bitmap = ((BitmapDrawable) Drawable.createFromPath(data.getStringExtra("Image"))).getBitmap();
             Glide.with(getContext()).load(data.getStringExtra("Image")).apply(RequestOptions.circleCropTransform()).into(mPhoto);
-//            mPhoto.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bitmap,6000));
         }
     }
 

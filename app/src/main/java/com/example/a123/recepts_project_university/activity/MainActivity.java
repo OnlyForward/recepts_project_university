@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -16,12 +17,25 @@ import com.example.a123.recepts_project_university.fragments.CreateRecipes;
 import com.example.a123.recepts_project_university.fragments.ReceptsList;
 import com.example.a123.recepts_project_university.fragments.SavedRecipes;
 import com.example.a123.recepts_project_university.fragments.Settings;
-import com.example.a123.recepts_project_university.model.StackFragments;
 
 public class MainActivity extends BasicActivity {
-    private StackFragments mStackFragments;
 
     private boolean hide = true;
+    private  onQueryWritten listener;
+
+
+
+    public interface onQueryWritten{
+        void getReceipts(String receipts);
+    }
+
+    public  void setItemListener(onQueryWritten listener1){
+        listener = listener1;
+    }
+
+    public  void setItemListenerDb(onQueryWritten listener1){
+        listener = listener1;
+    }
 
     @Override
     public Fragment createFragment() {
@@ -47,6 +61,18 @@ public class MainActivity extends BasicActivity {
             SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
             SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    listener.getReceipts(s);
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    return false;
+                }
+            });
         } else {
             menu.setGroupVisible(R.id.group_search, hide);
             this.invalidateOptionsMenu();
@@ -57,9 +83,6 @@ public class MainActivity extends BasicActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         return super.onOptionsItemSelected(item);
@@ -68,7 +91,6 @@ public class MainActivity extends BasicActivity {
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
         item.setChecked(true);
         Fragment fragment = null;
@@ -99,11 +121,17 @@ public class MainActivity extends BasicActivity {
                 fragment = new CreateRecipes();
                 this.invalidateOptionsMenu();
                 break;
+            case R.id.nav_quit:
+                Log.i("Quit", "he came here");
+                finishAffinity();
+                break;
         }
 
-        startFragment(fragment);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        if(fragment!=null) {
+            startFragment(fragment);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+        }
         return true;
     }
 

@@ -3,6 +3,7 @@ package com.example.a123.recepts_project_university.activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -40,7 +41,6 @@ public class variantOfSorts extends AppCompatActivity {
                 finish();
                 break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -48,7 +48,6 @@ public class variantOfSorts extends AppCompatActivity {
     public void finish() {
         mySettings.setVarSort(varSearch);
         super.finish();
-
     }
 
     @Override
@@ -75,9 +74,14 @@ public class variantOfSorts extends AppCompatActivity {
         varSearch = mySettings.getVarSort();
         mAdapter = new SortVarAdapter();
 
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView = (RecyclerView)findViewById(R.id.sort_variants);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+                mLayoutManager.getOrientation());
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
     }
 
 

@@ -8,6 +8,8 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 
 import com.example.a123.recepts_project_university.R;
 import com.example.a123.recepts_project_university.activity.DescriptionRecipe;
+import com.example.a123.recepts_project_university.activity.MainActivity;
 import com.example.a123.recepts_project_university.db.model.Receipt;
 import com.example.a123.recepts_project_university.model.ReceiptsLab;
 
@@ -30,13 +33,15 @@ import java.util.List;
 public class ReceptsList extends Fragment {
 
     private RecyclerView mList;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     static int a = 10;
 
     private List<Receipt> mReceipts;
     private AssetManager mAssetManager;
-    private String[] mImages;
+//    private String[] mImages;
     private static List<String> mELements;
     private boolean isLoading;
+    private List<Receipt> list_for_change;
 
 
     private ListAdapter mListAdapter;
@@ -52,41 +57,67 @@ public class ReceptsList extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recepts_list,container,false);
         ReceiptsLab receiptsLab = ReceiptsLab.get(getActivity());
+        mSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.refresh);
+        mSwipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getContext(),R.color.colorPrimary),ContextCompat.getColor(getContext(),R.color.colorPrimaryDark));
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mReceipts = ReceiptsLab.get(getContext()).getReceipts();
+                        mListAdapter.notifyDataSetChanged();
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                },2000);
+            }
+        });
+
         mReceipts = receiptsLab.getReceipts();
         mELements = new ArrayList<>();
         mListAdapter = new ListAdapter();
         mLayoutManager = new GridLayoutManager(getContext(),3);
         isLoading = false;
         mAssetManager = getActivity().getAssets();
-        try {
-            mImages = mAssetManager.list("icon");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        for(int i=0;i<18;i++){
-            mELements.add(mImages[i]);
-        }
+//        try {
+//            mImages = mAssetManager.list("icon");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        for(int i=0;i<18;i++){
+//            mELements.add(mImages[i]);
+//        }
 
         mList = (RecyclerView)view.findViewById(R.id.list_of_recepts);
         mList.setLayoutManager(mLayoutManager);
         mList.setAdapter(mListAdapter);
+
         mList.addOnScrollListener(scrollListener);
+
+        ((MainActivity)getActivity()).setItemListener(new MainActivity.onQueryWritten() {
+            @Override
+            public void getReceipts(String receipts) {
+                mReceipts = ReceiptsLab.get(getContext()).getReceipts(receipts);
+                mListAdapter.notifyDataSetChanged();
+            }
+        });
 
         return view;
     }
 
 
-    public void AddELements(){
-        if(a+18<mImages.length) {
-            for (int i = a; i < a + 18; i++) {
-                mELements.add(mImages[i]);
-            }
-            isLoading = false;
-            a += 19;
-            mListAdapter.notifyDataSetChanged();
-        }
-    }
+//    public void AddELements(){
+//        mSwipeRefreshLayout.setRefreshing(true);
+//        if(a+18<mImages.length) {
+//            for (int i = a; i < a + 18; i++) {
+//                mELements.add(mImages[i]);
+//            }
+//            isLoading = false;
+//            a += 19;
+//            mListAdapter.notifyDataSetChanged();
+//        }
+//    }
 
     RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
         @Override
@@ -100,7 +131,7 @@ public class ReceptsList extends Fragment {
             if (!isLoading) {//проверяем, грузим мы что-то или нет, эта переменная должна быть вне класса  OnScrollListener
                 if ( (visibleItemCount+firstVisibleItems) >= totalItemCount) {
                     isLoading = true;//ставим флаг что мы попросили еще элемены
-                    AddELements();
+                   // AddELements();
 //                    if(loadingListener != null){
 //                        loadingListener.loadMoreItems(totalItemCount);//тут я использовал калбэк который просто говорит наружу что нужно еще элементов и с какой позиции начинать загрузку
 //                    }
@@ -132,7 +163,7 @@ public class ReceptsList extends Fragment {
 
         @Override
         public int getItemCount() {
-            return mELements.size();
+            return mReceipts.size();
         }
 
         @Override
@@ -153,7 +184,14 @@ public class ReceptsList extends Fragment {
             @Override
             public void run() {
                 if(delay==1) {
-                    Intent intent = DescriptionRecipe.newInstance(getAdapterPosition(),getContext());
+                    int var = 0;
+                    for(int i = 0;i<ReceiptsLab.get(getContext()).getReceipts().size();i++){
+                        if(ReceiptsLab.get(getContext()).getReceipts().get(i).getTitle().equals(mReceipts.get(getAdapterPosition()).getTitle())){
+                            var = i;
+                            break;
+                        }
+                    }
+                    Intent intent = DescriptionRecipe.newInstance(var,getContext());
                     delay = 0;
                     startActivity(intent);
                 }
@@ -191,7 +229,7 @@ public class ReceptsList extends Fragment {
 
         public void onBind(int position){
             try{
-                inputStream = getActivity().getAssets().open("icon/"+mELements.get(position));
+                inputStream = getActivity().getAssets().open("icon/"+mReceipts.get(position).getIcon());
                 Drawable d = Drawable.createFromStream(inputStream, null);
                 mPicture.setImageDrawable(d);
             }
@@ -201,6 +239,5 @@ public class ReceptsList extends Fragment {
             mTitle.setText(mReceipts.get(position).getTitle());
         }
     }
-
 
 }

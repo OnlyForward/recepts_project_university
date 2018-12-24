@@ -103,7 +103,6 @@ public class Gallery extends Fragment {
     private void setImage(String ImageUrl, ImageView image, String append, Context context){
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-//        Glide.with(context).load(append + ImageUrl).into(image);
         imageLoader.displayImage(append + ImageUrl, image, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {

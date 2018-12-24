@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,12 +19,14 @@ import android.widget.TextView;
 
 import com.example.a123.recepts_project_university.R;
 import com.example.a123.recepts_project_university.activity.DescriptionRecipe;
+import com.example.a123.recepts_project_university.activity.MainActivity;
 import com.example.a123.recepts_project_university.db.model.Receipt;
 import com.example.a123.recepts_project_university.model.AppDbHelper;
 import com.example.a123.recepts_project_university.model.TakeDb;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,16 +38,13 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class SavedRecipes extends Fragment {
-
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
     private RecyclerView mRecyclerView;
     private List<Receipt> mReceipts;
 
 
     private ListAdapter mListAdapter;
     private GridLayoutManager mLayoutManager;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private OnFragmentInteractionListener mListener;
 
@@ -67,7 +68,23 @@ public class SavedRecipes extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recepts_list,container,false);
 
-        AppDbHelper appDbHelper = TakeDb.getAppDbHelper();
+        final AppDbHelper appDbHelper = TakeDb.getAppDbHelper();
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.refresh);
+        mSwipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getContext(),R.color.colorPrimary),ContextCompat.getColor(getContext(),R.color.colorPrimaryDark));
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mReceipts = appDbHelper.getAllReceipts();
+                        mListAdapter.notifyDataSetChanged();
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                },2000);
+            }
+        });
 
         mRecyclerView = (RecyclerView)view.findViewById(R.id.list_of_recepts);
 
@@ -77,6 +94,25 @@ public class SavedRecipes extends Fragment {
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mListAdapter);
+
+        ((MainActivity)getActivity()).setItemListener(new MainActivity.onQueryWritten() {
+            @Override
+            public void getReceipts(String receipts) {
+                List<Receipt> timed = new ArrayList<>();
+                if(receipts!=null || receipts!="") {
+                    for (Receipt r :
+                            appDbHelper.getAllReceipts()) {
+                        if (r.getTitle().toLowerCase().contains(receipts.toLowerCase())) {
+                            timed.add(r);
+                        }
+                    }
+                    mReceipts = timed;
+                }else{
+                    mReceipts = appDbHelper.getAllReceipts();
+                }
+                mListAdapter.notifyDataSetChanged();
+            }
+        });
 
         return view;
     }
@@ -169,7 +205,7 @@ public class SavedRecipes extends Fragment {
                 public void onClick(View view) {
                     mLiked.setImageDrawable(getResources().getDrawable(R.drawable.saved_image));
                     AppDbHelper appDbHelper = TakeDb.getAppDbHelper();
-                    appDbHelper.deleteReceipt(mReceipts.get(getAdapterPosition()).getId_receipts());
+                    appDbHelper.deleteReceipt(mReceipts.get(getAdapterPosition()),mReceipts.get(getAdapterPosition()).getListStep());
                     mReceipts.remove(getAdapterPosition());
                     mListAdapter.notifyDataSetChanged();
                 }
@@ -195,7 +231,7 @@ public class SavedRecipes extends Fragment {
 
         public void onBind(int position){
             try{
-                inputStream = getActivity().getAssets().open("icon/"+mReceipts.get(position).getIcon());
+                inputStream = getActivity().getAssets().open("icon_full/"+mReceipts.get(position).getIcon());
                 Drawable d = Drawable.createFromStream(inputStream, null);
                 mPicture.setImageDrawable(d);
             }
