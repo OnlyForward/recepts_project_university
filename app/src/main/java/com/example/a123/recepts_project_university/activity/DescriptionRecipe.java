@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -21,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.a123.recepts_project_university.R;
 import com.example.a123.recepts_project_university.db.model.Receipt;
 import com.example.a123.recepts_project_university.dialogs.DialogRecepts;
@@ -28,6 +30,7 @@ import com.example.a123.recepts_project_university.model.AppDbHelper;
 import com.example.a123.recepts_project_university.model.ReceiptsLab;
 import com.example.a123.recepts_project_university.model.TakeDb;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -65,6 +68,16 @@ public class DescriptionRecipe extends AppCompatActivity {
         args.putExtra(ARG_MENU_ID, menuId);
         args.putExtra("Saved", true);
         return args;
+    }
+
+    public void load_image_from_path(int pos){
+        File file = new File(mReceipt.getListStep().get(pos).getImageToStep());
+        Intent intent = new Intent();
+        intent.setAction(android.content.Intent.ACTION_VIEW);
+        Uri uri = Uri.parse("file://" + file.getAbsolutePath());
+        intent.setDataAndType(uri,"image/*");
+        //startActivity(intent);
+       //Glide
     }
 
 
@@ -247,8 +260,13 @@ public class DescriptionRecipe extends AppCompatActivity {
             layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = layoutInflater.inflate(R.layout.for_second_view_pager, null);
             ImageView imageView = (ImageView) view.findViewById(R.id.image_for_recepts);
-            Drawable drawable = loadDrawable(getApplicationContext().getAssets(), "image/" + mReceipt.getListStep().get(position).getImageToStep());
-            imageView.setImageDrawable(drawable);
+            if(!mReceipt.getListStep().get(position).getImageToStep().contains("image")) {
+                Drawable drawable = loadDrawable(getApplicationContext().getAssets(), "image/" + mReceipt.getListStep().get(position).getImageToStep());
+                imageView.setImageDrawable(drawable);
+            }else{
+                Glide.with(getApplicationContext()).load(mReceipt.getListStep().get(position).getImageToStep()).into(imageView);
+
+            }
             mDescription = (TextView) view.findViewById(R.id.description);
             mDescription.setText(mReceipt.getListStep().get(position).getImageDesciption());
             ViewPager vp = (ViewPager) container;

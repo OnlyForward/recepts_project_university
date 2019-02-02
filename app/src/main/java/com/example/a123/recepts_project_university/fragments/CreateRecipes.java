@@ -120,7 +120,6 @@ public class CreateRecipes extends Fragment {
         });
 
 
-
         mLinearLayoutManagerIngredients = new LinearLayoutManager(getContext()) {
             @Override
             public boolean canScrollVertically() {
@@ -182,7 +181,7 @@ public class CreateRecipes extends Fragment {
             @Override
             public void onClick(View view) {
                 if (mImagesList.size() != 0) {
-                    mBitmaps.remove(mDescriptionSteps.size()-1);
+                    mBitmaps.remove(mDescriptionSteps.size() - 1);
                     mSteps.removeViewAt(mImagesList.size() - 1);
                     mImagesList.remove(mImagesList.size() - 1);
                     mDescriptionSteps.remove(mDescriptionSteps.size() - 1);
@@ -196,23 +195,25 @@ public class CreateRecipes extends Fragment {
             @Override
             public void onClick(View view) {
                 Receipt receipt = new Receipt();
-                mImagesList.set(0, getActivity().getExternalFilesDir(null)+"/image_icon/pic1.jpg");
+                mImagesList.set(0, getActivity().getExternalFilesDir(null) + "/image_icon/pic1.jpg");
                 receipt.setTitle(mTitle.getEditableText().toString());
                 receipt.setDescription(mDescription.getEditableText().toString());
                 receipt.setIngredients("djasl");
                 receipt.setImageMain(mImagesList.get(0));
-                receipt.setIcon(getActivity().getExternalFilesDir(null)+"/image_icon/pic1.jpg");
+                receipt.setIcon(getActivity().getExternalFilesDir(null) + "/image_icon/pic1.jpg");
                 AppDbHelper appDbHelper = TakeDb.getAppDbHelper();
                 long key = appDbHelper.saveReceipts(receipt);
-                for (int i = 0;i<mDescriptionSteps.size();i++){
-                    mDescriptionSteps.get(i).setId_receipts(key);
-                    appDbHelper.saveSteps(mDescriptionSteps.get(i));
-                }
+//                for (int i = 0; i < mDescriptionSteps.size(); i++) {
+//                    mDescriptionSteps.get(i).setId_receipts(key);
+//                    appDbHelper.saveSteps(mDescriptionSteps.get(i));
+//                }
                 try {
-                    saveRecept();
+                    for (int i = 0; i < mDescriptionSteps.size(); i++) {
+                        saveRecept("/image/", i, key);
+                    }
 
-                }catch (IOException e){
-                    Log.i("IOexception",e.getMessage());
+                } catch (IOException e) {
+                    Log.i("IOexception", e.getMessage());
                 }
             }
 
@@ -221,15 +222,20 @@ public class CreateRecipes extends Fragment {
         return view;
     }
 
-    private void saveRecept() throws IOException {
-        mBitmaps.set(0,((ImageView) mSteps.getChildAt(picture).findViewById(R.id.image_of_step)).getDrawable());
-        String uuid = UUID.randomUUID().toString()+".jpg";
-        mFile = new File(getActivity().getExternalFilesDir(null)+"/image_icon/", uuid);
+    private void saveRecept(String path, int number, Long id) throws IOException {
+        mBitmaps.set(0, ((ImageView) mSteps.getChildAt(number).findViewById(R.id.image_of_step)).getDrawable());
+        String uuid = UUID.randomUUID().toString() + ".jpg";///icon/
+        mFile = new File(getActivity().getExternalFilesDir(null) + path, uuid);
+
+//        mDescriptionSteps.get(number).setImageDesciption(((TextView) mSteps.getChildAt(number).findViewById(R.id.text_var_of_sort)).getText().toString());
+        mDescriptionSteps.get(number).setImageToStep(getActivity().getExternalFilesDir(null) + path + "image"+uuid);
+        mDescriptionSteps.get(number).setId_receipts(id);
+
 
 //      galleryAddPic(mCurrentPath);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         Bitmap bitmap = ((BitmapDrawable) mBitmaps.get(0)).getBitmap();
-        bitmap = Bitmap.createScaledBitmap(bitmap,150,200,true);
+        bitmap = Bitmap.createScaledBitmap(bitmap, 150, 200, true);
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] byteArray = stream.toByteArray();
         FileOutputStream output = new FileOutputStream(mFile);
